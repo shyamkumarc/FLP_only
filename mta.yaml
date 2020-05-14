@@ -1,0 +1,85 @@
+ID: FLP_only
+_schema-version: '2.1'
+parameters:
+  deploy_mode: html5-repo
+version: 0.0.1
+modules:
+  - name: flp-only-approuter
+    type: approuter.nodejs
+    path: flp-only-approuter
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: FLP_only_html5_repo_runtime
+      - name: portal_resources_FLP_only
+      - name: uaa_FLP_only
+  - name: FLP_only_ui_deployer
+    type: com.sap.html5.application-content
+    path: FLP_only_ui_deployer
+    requires:
+      - name: FLP_only_html5_repo_host
+  - name: FLP_only-db
+    type: hdb
+    path: db
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    requires:
+      - name: FLP_only-db-hdi-container
+  - name: FLP_only-srv
+    type: nodejs
+    path: srv
+    parameters:
+      memory: 512M
+      disk-quota: 512M
+    provides:
+      - name: srv_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: FLP_only-db-hdi-container
+      - name: uaa_FLP_only
+  - name: klkl
+    type: com.sap.portal.content
+    path: klkl
+    parameters:
+      stack: cflinuxfs3
+      memory: 128M
+      buildpack: 'https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.6.39/nodejs-buildpack-cflinuxfs3-v1.6.39.zip'
+    requires:
+      - name: portal_resources_FLP_only
+      - name: uaa_FLP_only
+      - name: FLP_only_html5_repo_host
+      - name: FLP_only_ui_deployer
+resources:
+  - name: FLP_only_html5_repo_runtime
+    parameters:
+      service-plan: app-runtime
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: FLP_only_html5_repo_host
+    parameters:
+      service-plan: app-host
+      service: html5-apps-repo
+      config:
+       sizeLimit: 6   
+    type: org.cloudfoundry.managed-service
+  - name: FLP_only-db-hdi-container
+    type: com.sap.xs.hdi-container
+    properties:
+      hdi-container-name: '${service-name}'
+  - name: uaa_FLP_only
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: application
+      service: xsuaa
+      config:
+        xsappname: 'FLP_only-${space}'
+        tenant-mode: dedicated
+  - name: portal_resources_FLP_only
+    parameters:
+      service-plan: standard
+      service: portal
+    type: org.cloudfoundry.managed-service
+
