@@ -63,7 +63,7 @@ resources:
       service-plan: app-host
       service: html5-apps-repo
       config:
-       sizeLimit: 6   
+       sizeLimit: 4  
     type: org.cloudfoundry.managed-service
   - name: FLP_only-db-hdi-container
     type: com.sap.xs.hdi-container
