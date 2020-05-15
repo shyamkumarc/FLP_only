@@ -19,6 +19,12 @@ modules:
     path: FLP_only_ui_deployer
     requires:
       - name: FLP_only_html5_repo_host
+    build-parameters:
+      requires:
+        - name: ui1
+          artifacts:
+            - './*'
+          target-path: resources/ui1
   - name: FLP_only-db
     type: hdb
     path: db
@@ -52,6 +58,16 @@ modules:
       - name: uaa_FLP_only
       - name: FLP_only_html5_repo_host
       - name: FLP_only_ui_deployer
+  - name: ui1
+    type: html5
+    path: ui1
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - npm run build
+      supported-platforms: []
+      build-result: dist
 resources:
   - name: FLP_only_html5_repo_runtime
     parameters:
@@ -63,7 +79,7 @@ resources:
       service-plan: app-host
       service: html5-apps-repo
       config:
-       sizeLimit: 4  
+        sizeLimit: 4
     type: org.cloudfoundry.managed-service
   - name: FLP_only-db-hdi-container
     type: com.sap.xs.hdi-container
@@ -82,4 +98,8 @@ resources:
       service-plan: standard
       service: portal
     type: org.cloudfoundry.managed-service
-
+  - name: dest_FLP_only
+    parameters:
+      service-plan: lite
+      service: destination
+    type: org.cloudfoundry.managed-service

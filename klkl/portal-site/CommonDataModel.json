@@ -26,7 +26,11 @@
 				"i18n": "i18n/defaultGroupId.properties"
 			},
 			"payload": {
-				"viz": []
+				"viz": [{
+					"id": "ui1.ui1-0-1589532753571",
+					"appId": "ui1.ui1",
+					"vizId": "object1-action1"
+				}]
 			}
 		}],
 		"sites": [{
